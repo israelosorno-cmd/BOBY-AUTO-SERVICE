@@ -67,7 +67,7 @@ with tab_inspeccion:
             
             # --- CONFIGURACIÓN DEL LINK ---
             # Reemplaza esta URL con el link exacto que ves en tu navegador
-            url_app = "https://tallerpy-jywboxpvgwzfufwyy3an9x.streamlit.app/" 
+            url_app = "https://tallerpy-jywboxpvgwzfufwyy3an9x.streamlit.app" 
             
             mensaje = f"🛠️ *CERTIFIED SERVICE PRO*\nHola {nombre}, revisa las fotos y firma la aprobación de tu {auto} aquí: {url_app}"
             wa_url = f"https://wa.me/{tel}?text={urllib.parse.quote(mensaje)}"
@@ -100,5 +100,6 @@ with tab_reporte_diario:
         else:
 
             st.info("No hay servicios aprobados hoy todavía.")
+
 
 
