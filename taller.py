@@ -9,7 +9,7 @@ def t(es, en):
     return es if st.session_state.lang == 'Español' else en
 
 # 2. CONFIGURACIÓN DE PÁGINA Y ESTILOS PROFESIONALES
-st.set_page_config(page_title="Service Pro Mobile - DVI", layout="wide", page_icon="🔧")
+st.set_page_config(page_title="Boby Auto Service - DVI", layout="wide", page_icon="🔧")
 
 # Selector de idioma en la barra lateral
 st.sidebar.selectbox("Language / Idioma", ["Español", "English"], key='lang')
@@ -25,7 +25,7 @@ st.markdown(f"""
 
 # 3. CONFIGURACIÓN MAESTRA (VERIFICADA)
 URL_APP = "https://tallerpy-jywboxpvgwzfufwyy3an9x.streamlit.app"
-TU_TELEFONO = "17134018085" # Tu número de Utah verificado
+TU_TELEFONO = "17134018085" # 7134018085
 
 query_params = st.query_params
 es_cliente = "cliente" in query_params
@@ -114,4 +114,5 @@ else:
                 msg_w = f"🛠️ *SERVICE PRO MOBILE*\n{t('Hola', 'Hello')} {nombre}, {t('adjunto su reporte', 'here is your report')}. Total: ${total_tax:.2f}.\n{t('Revise y apruebe aquí', 'Review and approve here')}: {link_f}"
                 wa_send = f"https://api.whatsapp.com/send?phone={whatsapp}&text={urllib.parse.quote(msg_w)}"
                 st.markdown(f'<a href="{wa_send}" target="_blank"><button style="width:100%; background-color:#25D366; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold;">📲 {t("ENVIAR AL CLIENTE", "SEND TO CUSTOMER")}</button></a>', unsafe_allow_html=True)
+
 
