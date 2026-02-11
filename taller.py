@@ -26,7 +26,7 @@ with col_lang:
     st.selectbox("🌐", ["Español", "English"], key='lang', label_visibility="collapsed")
 
 # 3. CONFIGURACIÓN MAESTRA
-URL_APP = "https://service-pro-mobile-dvi.streamlit.app"
+URL_APP = "https://tallerpy-jywboxpvgwzfufwyy3an9x.streamlit.app"
 TU_TELEFONO = "17134018085" 
 
 query_params = st.query_params
@@ -95,3 +95,4 @@ else:
                 msg_w = f"🛠️ *FACTURA SERVICE PRO MOBILE*\n{t('Hola', 'Hello')} {nombre}, {t('adjunto la factura de su', 'here is the invoice for your')} {vehiculo}.\nTotal: ${total_w:.2f}.\n{t('Revise y pague aquí', 'Review and pay here')}: {link_f}"
                 wa_send = f"https://api.whatsapp.com/send?phone={whatsapp}&text={urllib.parse.quote(msg_w)}"
                 st.markdown(f'<a href="{wa_send}" target="_blank"><button style="width:100%; background-color:#25D366; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold;">📲 {t("ENVIAR FACTURA", "SEND INVOICE")}</button></a>', unsafe_allow_html=True)
+
