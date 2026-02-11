@@ -17,7 +17,7 @@ st.markdown("""
 
 # CONFIGURACIÓN MAESTRA
 URL_APP = "https://fufwyy3an9x.streamlit.app"
-TU_TELEFONO = "17134018085" # Número ya integrado
+TU_TELEFONO = "17134018085" # Tu número de Utah integrado
 
 query_params = st.query_params
 es_cliente = "cliente" in query_params
@@ -34,7 +34,7 @@ def fila_inspeccion(label, key):
             st.camera_input(f"Captura {label}", key=f"cam_{key}", label_visibility="collapsed")
     return estado
 
-# --- VISTA DEL CLIENTE (REPORTE PARA FIRMAR) ---
+# --- VISTA DEL CLIENTE (REPORTE PARA FIRMAR O RECHAZAR) ---
 if es_cliente:
     nombre_c = query_params.get("cliente", "Estimado Cliente")
     monto_c = float(query_params.get("monto", 0))
@@ -43,20 +43,32 @@ if es_cliente:
 
     st.markdown(f'<div class="main-header"><h1>REPORTE DE INSPECCIÓN DIGITAL</h1><h3>{auto_c}</h3></div>', unsafe_allow_html=True)
     st.write(f"### Hola {nombre_c},")
-    st.write("A continuación se presenta el estado de su vehículo y el presupuesto para su aprobación.")
+    st.write("Revise el presupuesto y el estado de su vehículo para proceder con la autorización.")
     
     st.metric("Total Presupuestado (inc. Tax 7.15%)", f"${total_con_tax:.2f}")
     
-    st.markdown('<div class="section-blue">AUTORIZACIÓN LEGAL</div>', unsafe_allow_html=True)
-    st.markdown('<div class="legal-box">Al firmar, autorizo a Service Pro Mobile a realizar las reparaciones. Entiendo que los precios son estimaciones y acepto las condiciones de servicio en Utah.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="legal-box">Al autorizar, Service Pro Mobile procederá con la reparación. Si decide rechazar, se le pedirá informar el motivo para nuestros registros.</div>', unsafe_allow_html=True)
     
-    firma = st.text_input("Escriba su nombre completo para firmar")
-    if st.button("✅ APROBAR Y ENVIAR AL TALLER"):
-        if firma:
-            msg_conf = f"✅ *ORDEN APROBADA*\nYo, {firma}, autorizo el servicio para mi {auto_c} por un total de ${total_con_tax:.2f}."
-            wa_api = f"https://api.whatsapp.com/send?phone={TU_TELEFONO}&text={urllib.parse.quote(msg_conf)}"
-            st.success("¡Gracias! Presione el botón de abajo para enviar la confirmación final.")
-            st.markdown(f'<a href="{wa_api}" target="_blank"><button style="width:100%; background-color:#004a99; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Confirmar Firma vía WhatsApp 📲</button></a>', unsafe_allow_html=True)
+    col_aprobar, col_rechazar = st.columns(2)
+    
+    with col_aprobar:
+        firma = st.text_input("Escriba su nombre para ACEPTAR")
+        if st.button("✅ APROBAR SERVICIO"):
+            if firma:
+                msg_conf = f"✅ *ORDEN APROBADA*\nYo, {firma}, autorizo el servicio para mi {auto_c} por un total de ${total_con_tax:.2f}."
+                wa_api = f"https://api.whatsapp.com/send?phone={TU_TELEFONO}&text={urllib.parse.quote(msg_conf)}"
+                st.success("¡Aprobado! Presione abajo para confirmar.")
+                st.markdown(f'<a href="{wa_api}" target="_blank"><button style="width:100%; background-color:#004a99; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Confirmar Aprobación 📲</button></a>', unsafe_allow_html=True)
+            else:
+                st.error("Debe firmar para aprobar.")
+
+    with col_rechazar:
+        motivo = st.text_input("Motivo del RECHAZO (opcional)")
+        if st.button("❌ RECHAZAR SERVICIO"):
+            msg_rechazo = f"❌ *SERVICIO RECHAZADO*\nEl cliente {nombre_c} ha rechazado el presupuesto para su {auto_c}.\nMotivo: {motivo if motivo else 'No especificado'}."
+            wa_api_r = f"https://api.whatsapp.com/send?phone={TU_TELEFONO}&text={urllib.parse.quote(msg_rechazo)}"
+            st.warning("Rechazo registrado. Por favor, infórmenos vía WhatsApp.")
+            st.markdown(f'<a href="{wa_api_r}" target="_blank"><button style="width:100%; background-color:#ff4b4b; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Enviar Rechazo al Técnico 📲</button></a>', unsafe_allow_html=True)
 
 # --- VISTA DEL TÉCNICO (PANEL DE CONTROL) ---
 else:
@@ -86,7 +98,7 @@ else:
             if enviar and nombre and whatsapp:
                 p = f"?cliente={urllib.parse.quote(nombre)}&monto={presupuesto}&auto={urllib.parse.quote(vehiculo)}"
                 link_f = URL_APP + p
-                msg_w = f"🛠️ *SERVICE PRO MOBILE*\nHola {nombre}, adjunto el reporte de su {vehiculo}. Total: ${(presupuesto*1.0715):.2f}. Firme aquí: {link_f}"
+                msg_w = f"🛠️ *SERVICE PRO MOBILE*\nHola {nombre}, adjunto el reporte de su {vehiculo}. Total: ${(presupuesto*1.0715):.2f}. Revise aquí: {link_f}"
                 wa_send = f"https://api.whatsapp.com/send?phone={whatsapp}&text={urllib.parse.quote(msg_w)}"
                 st.markdown(f'<a href="{wa_send}" target="_blank"><button style="width:100%; background-color:#25D366; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">📲 ENVIAR REPORTE AL CLIENTE</button></a>', unsafe_allow_html=True)
 
