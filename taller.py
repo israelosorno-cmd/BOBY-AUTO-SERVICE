@@ -67,7 +67,7 @@ with tab_inspeccion:
             
             # --- CONFIGURACIÓN DEL LINK ---
             # Reemplaza esta URL con el link exacto que ves en tu navegador
-            url_app = "https://israel-taller.streamlit.app" 
+            url_app = "https://github.com/israelosorno-cmd/BOBY-AUTO-SERVICE/blob/main/taller.py" 
             
             mensaje = f"🛠️ *CERTIFIED SERVICE PRO*\nHola {nombre}, revisa las fotos y firma la aprobación de tu {auto} aquí: {url_app}"
             wa_url = f"https://wa.me/{tel}?text={urllib.parse.quote(mensaje)}"
@@ -98,4 +98,5 @@ with tab_reporte_diario:
             c_c.metric("Impuestos (7.15%)", f"${tax_recaudado:.2f}")
             st.table(ventas_hoy[['Cliente', 'Vehiculo', 'Total', 'Firma']])
         else:
+
             st.info("No hay servicios aprobados hoy todavía.")
