@@ -50,8 +50,8 @@ if es_cliente:
         if firma:
             # 1. Preparamos el mensaje de confirmación para ti
             mensaje_confirmacion = f"✅ *ORDEN APROBADA*\nYo, {firma}, autorizo el servicio para mi {auto_c} por un total de ${total_con_tax:.2f}."
-            tu_telefono = "TU_NUMERO_AQUI" # Pon tu número de Utah aquí (17134018085)
-            wa_confirmacion = f"https://wa.me/{tu_telefono}?text={urllib.parse.quote(mensaje_confirmacion)}"
+            tu_telefono = "7134018085" # Pon tu número de Utah aquí (7134018085)
+            wa_confirmacion = f"https://wa.me/{7134018085}?text={urllib.parse.quote(mensaje_confirmacion)}"
             
             st.success("¡Gracias! Para finalizar, presiona el botón de abajo para enviar tu firma al técnico.")
             
@@ -96,6 +96,7 @@ else:
     with tab_ingresos:
         st.header("Reporte de Ingresos Diarios")
         st.write("Aquí verás el resumen de lo aprobado hoy con el tax del 7.15%.")
+
 
 
 
