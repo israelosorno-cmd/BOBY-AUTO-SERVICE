@@ -1,15 +1,15 @@
 import streamlit as st
 import urllib.parse
 
-# 1. SISTEMA DE IDIOMAS
+# 1. SISTEMA DE IDIOMAS (Superior Derecha)
 if 'lang' not in st.session_state:
     st.session_state.lang = 'Español'
 
 def t(es, en):
     return es if st.session_state.lang == 'Español' else en
 
-# 2. CONFIGURACIÓN Y ESTILOS PROFESIONALES
-st.set_page_config(page_title="Service Pro Mobile - DVI", layout="wide", page_icon="🔧")
+# 2. CONFIGURACIÓN Y ESTILOS
+st.set_page_config(page_title="Service Pro Mobile - Full DVI", layout="wide", page_icon="🔧")
 
 st.markdown(f"""
     <style>
@@ -20,7 +20,6 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# CABECERA CON IDIOMA SUPERIOR DERECHA
 col_head, col_lang = st.columns([5, 1])
 with col_lang:
     st.selectbox("🌐", ["Español", "English"], key='lang', label_visibility="collapsed")
@@ -42,26 +41,24 @@ def fila_inspeccion(label_es, label_en, key):
             st.camera_input(f"Captura {label}", key=f"cam_{key}", label_visibility="collapsed")
     return estado
 
-# --- VISTA DEL CLIENTE (REPORTE + FACTURA + FIRMA) ---
+# --- VISTA DEL CLIENTE (RESUMEN 27 PUNTOS + FACTURA + APROBACIÓN) ---
 if es_cliente:
     nombre_c = query_params.get("cliente", t("Cliente", "Customer"))
     labor_c = float(query_params.get("monto", 0))
     partes_c = float(query_params.get("partes", 0))
     auto_c = query_params.get("auto", t("Vehículo", "Vehicle"))
-    
     subtotal = labor_c + partes_c
     tax = subtotal * 0.0715
     total = subtotal + tax
 
-    st.markdown(f'<div class="main-header"><h1>{t("INSPECCIÓN Y FACTURA DIGITAL", "DIGITAL INSPECTION & INVOICE")}</h1><h3>{auto_c}</h3></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-header"><h1>{t("INSPECCIÓN Y COTIZACIÓN DIGITAL", "DIGITAL INSPECTION & QUOTE")}</h1><h3>{auto_c}</h3></div>', unsafe_allow_html=True)
     
-    # Resumen de Factura
+    # Módulo de Resumen de Facturación
     st.markdown(f"""
     <div class="invoice-box">
-        <h4>{t("Resumen de Cobro", "Billing Summary")}</h4>
+        <h4>{t("Resumen de Factura", "Invoice Summary")}</h4>
         <hr>
-        <p><b>{t("Mano de Obra", "Labor")}:</b> ${labor_c:,.2f}</p>
-        <p><b>{t("Partes", "Parts")}:</b> ${partes_c:,.2f}</p>
+        <p><b>{t("Labor", "Labor")}:</b> ${labor_c:,.2f} | <b>{t("Partes", "Parts")}:</b> ${partes_c:,.2f}</p>
         <p><b>Tax (7.15%):</b> ${tax:,.2f}</p>
         <h2 style="color:#004a99;">TOTAL: ${total:,.2f}</h2>
     </div>
@@ -69,15 +66,15 @@ if es_cliente:
 
     st.divider()
     
+    # Módulo de Decisión
     col_a, col_r = st.columns(2)
     with col_a:
-        firma = st.text_input(t("Escriba su nombre para APROBAR", "Type name to APPROVE"))
-        if st.button(t("✅ APROBAR Y FIRMAR", "✅ APPROVE & SIGN")):
+        firma = st.text_input(t("Escriba su nombre para ACEPTAR", "Type name to APPROVE"))
+        if st.button(t("✅ ACEPTAR Y FIRMAR", "✅ APPROVE & SIGN")):
             if firma:
                 msg = f"✅ *APPROVED*\n{firma} {t('autoriza el trabajo por', 'authorizes work for')} ${total:,.2f}."
                 wa = f"https://api.whatsapp.com/send?phone={TU_TELEFONO}&text={urllib.parse.quote(msg)}"
                 st.markdown(f'<a href="{wa}" target="_blank"><button style="width:100%; background-color:#004a99; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold;">{t("Confirmar Firma", "Confirm Signature")} 📲</button></a>', unsafe_allow_html=True)
-
     with col_r:
         motivo = st.text_input(t("Motivo de rechazo", "Reason for decline"))
         if st.button(t("❌ RECHAZAR", "❌ DECLINE")):
@@ -85,36 +82,40 @@ if es_cliente:
             wa_r = f"https://api.whatsapp.com/send?phone={TU_TELEFONO}&text={urllib.parse.quote(msg_r)}"
             st.markdown(f'<a href="{wa_r}" target="_blank"><button style="width:100%; background-color:#ff4b4b; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold;">{t("Enviar Rechazo", "Send Decline")} 📲</button></a>', unsafe_allow_html=True)
 
-# --- VISTA DEL TÉCNICO (PANEL COMPLETO) ---
+# --- VISTA DEL TÉCNICO (REGISTRO + INSPECCIÓN 27 PUNTOS + FACTURACIÓN) ---
 else:
     st.markdown(f'<div class="main-header"><h1>Service Pro Mobile - {t("Panel de Control", "Control Panel")}</h1></div>', unsafe_allow_html=True)
     
     with st.form("master_form"):
+        # MÓDULO 1: REGISTRO DE CLIENTE Y VEHÍCULO
+        st.markdown(f'<div class="category-header">1. {t("Información General", "General Information")}</div>', unsafe_allow_html=True)
         c1, c2, c3 = st.columns(3)
         nombre = c1.text_input(t("Cliente", "Customer"))
         whatsapp = c1.text_input(t("WhatsApp (1XXXXXXXXXX)", "WhatsApp"))
         vehiculo = c2.text_input(t("Vehículo", "Vehicle"))
         millaje = c2.text_input(t("Millaje", "Odometer"))
-        m_labor = c3.number_input(t("Mano de Obra ($)", "Labor ($)"), min_value=0.0)
-        m_partes = c3.number_input(t("Partes/Materiales ($)", "Parts/Materials ($)"), min_value=0.0)
+        vin = c3.text_input("VIN")
 
-        # SECCIONES DE INSPECCIÓN
-        st.markdown(f'<div class="category-header">1. {t("Motor y Líquidos", "Engine & Fluids")}</div>', unsafe_allow_html=True)
+        # MÓDULO 2: INSPECCIÓN DETALLADA (27 Puntos resumidos por categorías)
+        st.markdown(f'<div class="category-header">2. {t("Inspección de 27 Puntos", "27-Point Inspection")}</div>', unsafe_allow_html=True)
+        # Motor
         fila_inspeccion("Aceite y Filtro", "Oil & Filter", "oil")
-        fila_inspeccion("Anticongelante", "Coolant", "cool")
-        fila_inspeccion("Líquido de Frenos", "Brake Fluid", "br_f")
+        fila_inspeccion("Líquidos (Coolant/Frenos/Dirección)", "Fluids", "fluids")
+        # Frenos y Llantas
+        fila_inspeccion("Frenos Delanteros/Traseros", "Brakes Front/Rear", "brakes")
+        fila_inspeccion("Llantas (Estado/Presión)", "Tires Condition/PSI", "tires")
+        # Seguridad y Eléctrico
+        fila_inspeccion("Batería y Alternador", "Battery & Alternator", "electrical")
+        fila_inspeccion("Luces y Limpiaparabrisas", "Lights & Wipers", "safety")
+        st.text_area(t("Hallazgos de la Inspección", "Inspection Findings"), key="notes_ins")
 
-        st.markdown(f'<div class="category-header">2. {t("Frenos y Llantas", "Brakes & Tires")}</div>', unsafe_allow_html=True)
-        fila_inspeccion("Pastillas Delanteras", "Front Brake Pads", "f_p")
-        fila_inspeccion("Pastillas Traseras", "Rear Brake Pads", "r_p")
-        fila_inspeccion("Presión de Llantas", "Tire Pressure", "tire_p")
+        # MÓDULO 3: CREACIÓN DE COTIZACIÓN Y FACTURA
+        st.markdown(f'<div class="category-header">3. {t("Cotización y Facturación", "Quote & Billing")}</div>', unsafe_allow_html=True)
+        f1, f2 = st.columns(2)
+        m_labor = f1.number_input(t("Mano de Obra ($)", "Labor Cost ($)"), min_value=0.0)
+        m_partes = f2.number_input(t("Partes/Repuestos ($)", "Parts/Materials ($)"), min_value=0.0)
 
-        st.markdown(f'<div class="category-header">3. {t("Suspensión y Eléctrico", "Suspension & Electrical")}</div>', unsafe_allow_html=True)
-        fila_inspeccion("Batería / Carga", "Battery / Charging", "batt")
-        fila_inspeccion("Amortiguadores", "Shocks/Struts", "shocks")
-        fila_inspeccion("Luces Exteriores", "Exterior Lights", "lights")
-
-        if st.form_submit_button(f"🚀 {t('ENVIAR REPORTE Y FACTURA', 'SEND REPORT & INVOICE')}"):
+        if st.form_submit_button(f"🚀 {t('GENERAR Y ENVIAR AL CLIENTE', 'GENERATE & SEND TO CUSTOMER')}"):
             if nombre and whatsapp:
                 p = f"?cliente={urllib.parse.quote(nombre)}&monto={m_labor}&partes={m_partes}&auto={urllib.parse.quote(vehiculo)}"
                 link = URL_APP + p
