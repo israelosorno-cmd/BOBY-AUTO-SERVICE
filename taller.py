@@ -25,7 +25,7 @@ with c_lang:
     st.selectbox("🌐", ["Español", "English"], key='lang', label_visibility="collapsed")
 
 # 2. CONFIGURACIÓN MAESTRA
-URL_APP = "https://service-pro-mobile-dvi.streamlit.app"
+URL_APP = "https://tallerpy-jywboxpvgwzfufwyy3an9x.streamlit.app"
 TU_TELEFONO = "17134018085" 
 
 query_params = st.query_params
@@ -122,3 +122,4 @@ else:
                 st.markdown(f'<a href="{wa_send}" target="_blank"><button style="width:100%; background-color:#25D366; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold;">📲 {t("ENVIAR POR WHATSAPP", "SEND VIA WHATSAPP")}</button></a>', unsafe_allow_html=True)
             else:
                 st.error(t("Faltan datos del cliente o teléfono.", "Missing customer data or phone number."))
+
