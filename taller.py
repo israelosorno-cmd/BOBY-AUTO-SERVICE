@@ -8,8 +8,9 @@ if 'lang' not in st.session_state:
 def t(es, en):
     return es if st.session_state.lang == 'Español' else en
 
-# 2. CONFIGURACIÓN DE PÁGINA Y ESTILOS
+# 2. CONFIGURACIÓN Y ESTILOS
 st.set_page_config(page_title="Service Pro Mobile - DVI", layout="wide", page_icon="🔧")
+st.sidebar.selectbox("Language / Idioma", ["Español", "English"], key='lang')
 
 st.markdown(f"""
     <style>
@@ -18,11 +19,6 @@ st.markdown(f"""
     .stButton>button {{ width: 100%; border-radius: 10px; font-weight: bold; height: 3.5em; }}
     </style>
     """, unsafe_allow_html=True)
-
-# --- CABECERA CON IDIOMA A LA DERECHA ---
-col_head, col_lang = st.columns([5, 1])
-with col_lang:
-    st.selectbox("🌐", ["Español", "English"], key='lang', label_visibility="collapsed")
 
 # 3. CONFIGURACIÓN MAESTRA
 URL_APP = "https://service-pro-mobile-dvi.streamlit.app"
@@ -83,6 +79,7 @@ else:
         st.markdown(f'<div class="category-header">1. {t("Motor y Líquidos", "Engine & Fluids")}</div>', unsafe_allow_html=True)
         fila_inspeccion("Aceite de Motor", "Engine Oil", "oil")
         fila_inspeccion("Filtro de Aceite", "Oil Filter", "oil_f")
+        fila_inspeccion("Filtro de Aire", "Air Filter", "air_f")
         fila_inspeccion("Anticongelante (Coolant)", "Coolant", "cool")
         fila_inspeccion("Líquido de Frenos", "Brake Fluid", "br_f")
         fila_inspeccion("Dirección Asistida", "Power Steering Fluid", "ps_f")
@@ -104,11 +101,15 @@ else:
         # 3. SUSPENSIÓN Y SEGURIDAD
         st.markdown(f'<div class="category-header">3. {t("Suspensión y Eléctrico", "Suspension & Electrical")}</div>', unsafe_allow_html=True)
         fila_inspeccion("Amortiguadores", "Shocks/Struts", "shocks")
+        fila_inspeccion("Terminales de Dirección", "Tie Rod Ends", "tie_rods")
+        fila_inspeccion("Bujes de Suspensión", "Suspension Bushings", "bushings")
         fila_inspeccion("Batería (Voltaje/Carga)", "Battery Health", "batt")
         fila_inspeccion("Alternador / Carga", "Alternator System", "alt")
         fila_inspeccion("Faros Delanteros", "Headlights", "h_lights")
+        fila_inspeccion("Luces de Freno", "Brake Lights", "b_lights")
         fila_inspeccion("Limpiaparabrisas", "Wiper Blades", "wipers")
         fila_inspeccion("Sistema de Escape", "Exhaust System", "exhaust")
+        fila_inspeccion("Filtro de Cabina", "Cabin Air Filter", "cab_f")
 
         st.text_area(t("Notas Adicionales", "Additional Notes"), key="global_notes")
 
