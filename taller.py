@@ -48,11 +48,23 @@ if es_cliente:
     firma = st.text_input("Escriba su nombre completo como firma de aceptación")
     if st.button("✅ APROBAR Y ENVIAR AL TALLER"):
         if firma:
-            st.success("¡Gracias! Su aprobación ha sido enviada. El técnico iniciará el trabajo pronto.")
-            # Aquí se guardaría en tu base de datos para tu reporte diario
+            # 1. Preparamos el mensaje de confirmación para ti
+            mensaje_confirmacion = f"✅ *ORDEN APROBADA*\nYo, {firma}, autorizo el servicio para mi {auto_c} por un total de ${total_con_tax:.2f}."
+            tu_telefono = "TU_NUMERO_AQUI" # Pon tu número de Utah aquí (801XXXXXXX)
+            wa_confirmacion = f"https://wa.me/{tu_telefono}?text={urllib.parse.quote(mensaje_confirmacion)}"
+            
+            st.success("¡Gracias! Para finalizar, presiona el botón de abajo para enviar tu firma al técnico.")
+            
+            # 2. Botón final que el cliente presiona para notificarte
+            st.markdown(f'''
+                <a href="{wa_confirmacion}" target="_blank">
+                    <button style="width:100%; background-color:#004a99; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold;">
+                        Confirmar Firma vía WhatsApp 📲
+                    </button>
+                </a>
+            ''', unsafe_allow_html=True)
         else:
-            st.error("Por favor, escriba su nombre para firmar la aprobación.")
-
+            st.error("Por favor, escribe tu nombre para firmar la aprobación.")
 # --- VISTA DEL TÉCNICO (Lo que solo ves tú) ---
 else:
     tab_inspeccion, tab_ingresos = st.tabs(["📋 Nueva Inspección", "📈 Reporte de Ingresos"])
@@ -84,4 +96,5 @@ else:
     with tab_ingresos:
         st.header("Reporte de Ingresos Diarios")
         st.write("Aquí verás el resumen de lo aprobado hoy con el tax del 7.15%.")
+
 
