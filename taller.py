@@ -56,7 +56,7 @@ if es_cliente:
         if st.button("✅ APROBAR SERVICIO"):
             if firma:
                 msg_conf = f"✅ *ORDEN APROBADA*\nYo, {firma}, autorizo el servicio para mi {auto_c} por un total de ${total_con_tax:.2f}."
-                wa_api = f"https://api.whatsapp.com/send?phone={TU_TELEFONO}&text={urllib.parse.quote(msg_conf)}"
+                wa_api = f"https://api.whatsapp.com/send?phone={7134018085}&text={urllib.parse.quote(msg_conf)}"
                 st.success("¡Aprobado! Presione abajo para confirmar.")
                 st.markdown(f'<a href="{wa_api}" target="_blank"><button style="width:100%; background-color:#004a99; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Confirmar Aprobación 📲</button></a>', unsafe_allow_html=True)
             else:
@@ -66,7 +66,7 @@ if es_cliente:
         motivo = st.text_input("Motivo del RECHAZO (opcional)")
         if st.button("❌ RECHAZAR SERVICIO"):
             msg_rechazo = f"❌ *SERVICIO RECHAZADO*\nEl cliente {nombre_c} ha rechazado el presupuesto para su {auto_c}.\nMotivo: {motivo if motivo else 'No especificado'}."
-            wa_api_r = f"https://api.whatsapp.com/send?phone={TU_TELEFONO}&text={urllib.parse.quote(msg_rechazo)}"
+            wa_api_r = f"https://api.whatsapp.com/send?phone={7134018085}&text={urllib.parse.quote(msg_rechazo)}"
             st.warning("Rechazo registrado. Por favor, infórmenos vía WhatsApp.")
             st.markdown(f'<a href="{wa_api_r}" target="_blank"><button style="width:100%; background-color:#ff4b4b; color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">Enviar Rechazo al Técnico 📲</button></a>', unsafe_allow_html=True)
 
@@ -105,3 +105,4 @@ else:
     with tab2:
         st.header("Control de Ingresos Diarios")
         st.info("Aquí podrás ver el resumen de tus cierres diarios con el 7.15% de tax de Utah aplicado.")
+
