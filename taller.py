@@ -8,7 +8,7 @@ from datetime import datetime
 st.set_page_config(page_title="Service Pro Mobile - Digital DVI", layout="wide", page_icon="🔧")
 
 # URL de tu app (Actualizada según tu imagen)
-URL_APP = "https://fufwyy3an9x.streamlit.app"
+URL_APP = "https://tallerpy-jywboxpvgwzfufwyy3an9x.streamlit.app"
 
 # 2. CAPTURA DE DATOS DEL LINK (Lo que evita que el cliente vea tu panel)
 query_params = st.query_params
@@ -84,3 +84,4 @@ else:
     with tab_ingresos:
         st.header("Reporte de Ingresos Diarios")
         st.write("Aquí verás el resumen de lo aprobado hoy con el tax del 7.15%.")
+
